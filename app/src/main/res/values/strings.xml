@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">project_walgreens</string>
+    <string name="button">Button</string>
+    <string name="show">Show</string>
+    <string name="button_1">Button 1</string>
+    <string name="button_2">Button 2</string>
+    <string name="button_3">Button 3</string>
+    <string name="text_view_item">Text View Item</string>
+    <string name="my_account">My Account</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log IN</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile</string>
+    <string name="sign_in">Sign In</string>
+    <string name="have_an_account">Have an account?</string>
+    <string name="find_a_store">find a\nstore</string>
+    <string name="balance">Balance\nRewards</string>
+    <string name="refill_by_scan">Refill by\nScan</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="new_password">New Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="submit">Submit</string>
+    <string name="orders">Orders</string>
+    <string name="order_history">Order\nHistory</string>
+    <string name="order_track">Order\nTrack</string>
+    <string name="textview">TextView</string>
 </resources>

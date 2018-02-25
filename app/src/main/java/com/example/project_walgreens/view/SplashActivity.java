@@ -1,4 +1,4 @@
-package com.example.project_walgreens;
+package com.example.project_walgreens.view;
 
 import android.content.Intent;
 import android.os.Bundle;
