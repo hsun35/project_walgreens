@@ -53,7 +53,7 @@ public interface EcommerceService  {
 
     //forget password
     @GET("shop_fogot_pass.php")
-    public Call<Object> getForgetPassword(@Query("mobile") String mobile);//RetrieveResponse
+    public Call<Object> getPassword(@Query("mobile") String mobile);//RetrieveResponse
 
     //orders
 

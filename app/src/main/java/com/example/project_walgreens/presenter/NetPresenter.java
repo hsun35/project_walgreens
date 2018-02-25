@@ -3,6 +3,7 @@ package com.example.project_walgreens.presenter;
 import android.util.Log;
 
 import com.example.project_walgreens.model.CategoryResponse;
+import com.example.project_walgreens.model.ErrResponse;
 import com.example.project_walgreens.model.LoginResponse;
 import com.example.project_walgreens.model.LoginResponse3;
 import com.example.project_walgreens.model.LoginResponse4;
@@ -70,7 +71,7 @@ public class NetPresenter implements INetPresenter{
                         //Log.i("mylog", "resp item " + key_value[0] + " " + key_value[1]);
                         switch (key_value[0].trim()) {
                             case "msg":
-                                AccountDescription.msg = key_value[1].trim();
+                                AccountDescription.login = key_value[1].trim();
                                 break;
                             case "UserMobile":
                                 AccountDescription.UserMobile = key_value[1].trim();
@@ -98,11 +99,12 @@ public class NetPresenter implements INetPresenter{
                     Log.i("mylog", "login response: " + response.body().toString());
 
                 }
-                if (AccountDescription.msg.equals("success")) {
+                if (AccountDescription.login.equals("success")) {
                     Log.i("mylog", "login go to main activity");
                     iLoginFragment.login();
                 } else {
-                    Log.i("mylog", "login not success " + AccountDescription.msg);
+                    Log.i("mylog", "login not success " + AccountDescription.login);
+                    iLoginFragment.showLoginMessage("You info doesn't match any account.");
                 }
             }
 
@@ -114,7 +116,42 @@ public class NetPresenter implements INetPresenter{
 
         //return false;
     }
+    @Override
+    public void getPassword(String mobile) {
+        EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
 
+        Call<Object> call = ecommerceService.getPassword(mobile);
+        Log.i("mylog", "get password");
+        Log.i("mylog", "call url: " + call.request().url().toString());
+        call.enqueue(new Callback<Object>() {
+
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.body() instanceof ErrResponse) {
+                    Log.i("mylog", "response: " + ((ErrResponse) response.body()).getMsg());
+                } else if (response.body() instanceof List<?>) {
+                    String resp = ((List) response.body()).get(0).toString();
+                    resp = resp.replaceAll("[\\[\\](){}]","");
+                    String[] resp_array= resp.split(",");
+                    for (String item : resp_array) {
+                        String[] key_value = item.split("=");
+                        //Log.i("mylog", "resp item " + key_value[0] + " " + key_value[1]);
+                        if (key_value[0].trim().equals("UserPassword")) {
+                            iLoginFragment.showLoginMessage("Your password is " + key_value[1]);
+                        }
+                    }
+                } else {
+                    Log.i("mylog", "login response: " + response.body().toString());
+                    iLoginFragment.showLoginMessage("The phone number doesn't exist.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.i("mylog", "failure: " + t.getMessage());
+            }
+        });
+    }
     @Override
     public void getCategory(String api_key, String user_id) {
         EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
@@ -139,4 +176,6 @@ public class NetPresenter implements INetPresenter{
         });
 
     }
+
+
 }

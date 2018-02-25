@@ -6,4 +6,5 @@ package com.example.project_walgreens.view;
 
 public interface ILoginFragment {
     public void login();
+    public void showLoginMessage(String msg);
 }

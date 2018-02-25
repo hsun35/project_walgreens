@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.list) {
             Toast.makeText(MainActivity.this, "my account", Toast.LENGTH_SHORT).show();
-            if (AccountDescription.msg.equals("success")) {
+            if (AccountDescription.login.equals("success")) {
                 addAccountFragment();
             } else {
                 addLoginFragment();
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
     public void sendData(int item_index) {
         Object f = fragmentManager.findFragmentById(R.id.fragmentContainer);
         if (f instanceof FrontpageFragment) {
-            if (AccountDescription.msg.equals("success")) {
+            if (AccountDescription.login.equals("success")) {
                 if (item_index == 1) {
                     Toast.makeText(MainActivity.this, "Category List", Toast.LENGTH_SHORT).show();
                     addCategoryFragment();
@@ -128,6 +128,11 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
             Toast.makeText(MainActivity.this, "Log in", Toast.LENGTH_SHORT).show();
             addFrontpageFragment();
         }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
     /*@Override

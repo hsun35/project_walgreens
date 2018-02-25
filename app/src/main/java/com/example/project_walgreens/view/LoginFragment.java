@@ -60,8 +60,24 @@ public class LoginFragment extends Fragment implements ILoginFragment{
                 //String username = usernameText.getText().toString();
                 String mobile = mobileText.getText().toString();
                 String password = passwordText.getText().toString();
-                iNetPresenter.login(mobile, password);
-                Log.i("mylog", mobile + " " + password);
+                if (mobile == null || mobile.length() == 0 || password == null || password.length() == 0) {
+                    sendMessage.showMessage("Please don't leave any blanket empty.");
+                } else {
+                    iNetPresenter.login(mobile, password);
+                    Log.i("mylog", mobile + " " + password);
+                }
+            }
+        });
+
+        forgetPasswordText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String mobile = mobileText.getText().toString();
+                if (mobile == null || mobile.length() == 0) {
+                    sendMessage.showMessage("Please input your phone number.");
+                } else {
+                    iNetPresenter.getPassword(mobile);
+                }
             }
         });
     }
@@ -74,5 +90,10 @@ public class LoginFragment extends Fragment implements ILoginFragment{
     public void login() {
         //Log.i("mylog", "loginFragment log in");
         sendMessage.sendCommand("login");
+    }
+
+    @Override
+    public void showLoginMessage(String msg) {
+        sendMessage.showMessage(msg);
     }
 }

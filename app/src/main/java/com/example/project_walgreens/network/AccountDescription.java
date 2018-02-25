@@ -11,4 +11,5 @@ public class AccountDescription {
     public static String UserEmail = "";
     public static String UserMobile = "";
     public static String AppApiKey = "";
+    public static String login = "";
 }

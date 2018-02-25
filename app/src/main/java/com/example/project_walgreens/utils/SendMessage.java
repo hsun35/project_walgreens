@@ -7,6 +7,7 @@ package com.example.project_walgreens.utils;
 public interface SendMessage {
     void sendData(int item_index);
     void sendCommand(String command);
+    void showMessage(String message);
     //void setToolbar();
     //void sendToggle();
 }
