@@ -7,6 +7,8 @@ import com.example.project_walgreens.model.ErrResponse;
 import com.example.project_walgreens.model.LoginResponse;
 import com.example.project_walgreens.model.LoginResponse3;
 import com.example.project_walgreens.model.LoginResponse4;
+import com.example.project_walgreens.model.ProductResponse;
+import com.example.project_walgreens.model.SubCategoryResponse;
 import com.example.project_walgreens.network.AccountDescription;
 import com.example.project_walgreens.network.EcommerceService;
 import com.example.project_walgreens.network.ProductList;
@@ -14,6 +16,8 @@ import com.example.project_walgreens.network.RetrofitInstance;
 import com.example.project_walgreens.view.ICategoryFragment;
 import com.example.project_walgreens.view.ILoginFragment;
 import com.example.project_walgreens.view.IMainActivity;
+import com.example.project_walgreens.view.IProductFragment;
+import com.example.project_walgreens.view.ISubCategoryFragment;
 import com.example.project_walgreens.view.MainActivity;
 
 import java.util.Collection;
@@ -31,6 +35,8 @@ public class NetPresenter implements INetPresenter{
 
     ILoginFragment iLoginFragment;
     ICategoryFragment iCategoryFragment;
+    ISubCategoryFragment iSubCategoryFragment;
+    IProductFragment iProductFragment;
 
 
     public NetPresenter (ILoginFragment iLoginFragment) {
@@ -39,6 +45,12 @@ public class NetPresenter implements INetPresenter{
     }
     public NetPresenter (ICategoryFragment iCategoryFragment) {
         this.iCategoryFragment = iCategoryFragment;
+    }
+    public NetPresenter (ISubCategoryFragment iSubCategoryFragment) {
+        this.iSubCategoryFragment = iSubCategoryFragment;
+    }
+    public NetPresenter (IProductFragment iProductFragment) {
+        this.iProductFragment = iProductFragment;
     }
     @Override
     public void login(String mobile, String password) {
@@ -121,8 +133,8 @@ public class NetPresenter implements INetPresenter{
         EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
 
         Call<Object> call = ecommerceService.getPassword(mobile);
-        Log.i("mylog", "get password");
-        Log.i("mylog", "call url: " + call.request().url().toString());
+        //Log.i("mylog", "get password");
+        //Log.i("mylog", "call url: " + call.request().url().toString());
         call.enqueue(new Callback<Object>() {
 
             @Override
@@ -152,6 +164,60 @@ public class NetPresenter implements INetPresenter{
             }
         });
     }
+
+    @Override
+    public void getSubCategory(String Id, String api_key, String user_id) {
+        EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
+
+        Call<SubCategoryResponse> call = ecommerceService.getSubCategoryList(Id, api_key, user_id);
+        //Log.i("mylog", "get product");
+        //Log.i("mylog", "call url: " + call.request().url().toString());
+        call.enqueue(new Callback<SubCategoryResponse>() {
+            @Override
+            public void onResponse(Call<SubCategoryResponse> call, Response<SubCategoryResponse> response) {
+                //Log.i("mylog", "response: " + response.body().getSubCategory().get(0).getCatagoryImage());
+                ProductList.subCategoryItemList = response.body().getSubCategory();
+                //MovieAdapter adapter = new MovieAdapter(response.body().getResults(), MainActivity.this);
+                //recyclerView.setAdapter(adapter);
+                iSubCategoryFragment.obtainSubCategory();
+            }
+
+            @Override
+            public void onFailure(Call<SubCategoryResponse> call, Throwable t) {
+                Log.i("mylog", "failure: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getProduct(String Id, String api_key, String user_id) {
+        EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
+
+        Call<ProductResponse> call = ecommerceService.getProductList(Id, api_key, user_id);
+        Log.i("mylog", "get product");
+        Log.i("mylog", "call url: " + call.request().url().toString());
+        call.enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if (response.body().getProduct() == null || response.body().getProduct().size() == 0) {
+                    iProductFragment.showProductMessage("No products in the category.");
+                    iProductFragment.emptyShelf();
+                    return;
+                }
+                Log.i("mylog", "response: " + response.body().getProduct().get(0).getProductName());
+                ProductList.productItemList = response.body().getProduct();
+                //MovieAdapter adapter = new MovieAdapter(response.body().getResults(), MainActivity.this);
+                //recyclerView.setAdapter(adapter);
+                iProductFragment.obtainPruduct();
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                Log.i("mylog", "failure: " + t.getMessage());
+            }
+        });
+    }
+
     @Override
     public void getCategory(String api_key, String user_id) {
         EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);

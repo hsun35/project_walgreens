@@ -2,8 +2,10 @@ package com.example.project_walgreens.network;
 
 import com.example.project_walgreens.model.CategoryResponse;
 import com.example.project_walgreens.model.LoginResponse;
+import com.example.project_walgreens.model.ProductResponse;
 import com.example.project_walgreens.model.ResetResponse;
 import com.example.project_walgreens.model.RetrieveResponse;
+import com.example.project_walgreens.model.SubCategoryResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -24,15 +26,15 @@ public interface EcommerceService  {
 
     //Product Sub Category List
     @GET("cust_sub_category.php")
-    public Call<Object> getSubCategoryList(@Query("Id") int Id,
-                                                @Query("api_key") String api_key,
-                                                 @Query("user_id") int user_id);//CategoryResponse
+    public Call<SubCategoryResponse> getSubCategoryList(@Query("Id") String Id,
+                                                        @Query("api_key") String api_key,
+                                                        @Query("user_id") String user_id);//CategoryResponse
 
     //Product List
     @GET("cust_product.php")
-    public Call<Object> getProductList(@Query("Id") int Id,
-                                                     @Query("api_key") String api_key,
-                                                     @Query("user_id") int user_id);//ProductResponse
+    public Call<ProductResponse> getProductList(@Query("Id") String Id,
+                                                @Query("api_key") String api_key,
+                                                @Query("user_id") String user_id);//ProductResponse
 
     //Custom Registration, "successfully registered", "Mobile Number already exsist",
     @GET("shop_reg.php")

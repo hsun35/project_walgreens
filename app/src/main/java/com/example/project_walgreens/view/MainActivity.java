@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.project_walgreens.R;
 import com.example.project_walgreens.network.AccountDescription;
+import com.example.project_walgreens.network.ProductList;
 import com.example.project_walgreens.utils.SendMessage;
 
 public class MainActivity extends AppCompatActivity implements SendMessage, IMainActivity{
@@ -102,6 +103,57 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
         fragmentTransaction.commit();
     }
 
+    private void addSubCategoryFragment(int item_index) {
+        SubCategoryFragment subCategoryFragment;
+        fragmentTransaction=fragmentManager.beginTransaction();
+
+        subCategoryFragment = new SubCategoryFragment();
+        subCategoryFragment.setSendMessage(MainActivity.this);
+        subCategoryFragment.setId(ProductList.categoryItemList.get(item_index).getId());
+
+        fragmentTransaction.replace(R.id.fragmentContainer, subCategoryFragment);//
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void addProductFragment(int item_index) {
+        ProductFragment productFragment;
+        fragmentTransaction=fragmentManager.beginTransaction();
+
+        productFragment = new ProductFragment();
+        productFragment.setSendMessage(MainActivity.this);
+        productFragment.setId(ProductList.subCategoryItemList.get(item_index).getId());
+
+        fragmentTransaction.replace(R.id.fragmentContainer, productFragment);//
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void addProductDescription(int item_index) {
+        ProductDescriptionFragment descriptionFragment;
+        fragmentTransaction=fragmentManager.beginTransaction();
+
+        descriptionFragment = new ProductDescriptionFragment();
+        descriptionFragment.setSendMessage(MainActivity.this);
+        descriptionFragment.setId(item_index);
+
+        fragmentTransaction.replace(R.id.fragmentContainer, descriptionFragment);//
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void addCartFragment() {
+        CartFragment cartFragment;
+        fragmentTransaction=fragmentManager.beginTransaction();
+
+        cartFragment = new CartFragment();
+        cartFragment.setSendMessage(MainActivity.this);
+
+        fragmentTransaction.replace(R.id.fragmentContainer, cartFragment);//
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public void sendData(int item_index) {
         Object f = fragmentManager.findFragmentById(R.id.fragmentContainer);
@@ -118,6 +170,13 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
             }
         } else if (f instanceof CategoryFragment) {
             Toast.makeText(MainActivity.this, "Category #" + item_index, Toast.LENGTH_SHORT).show();
+            addSubCategoryFragment(item_index);
+        } else if (f instanceof SubCategoryFragment) {
+            Toast.makeText(MainActivity.this, "Sub Category #" + item_index, Toast.LENGTH_SHORT).show();
+            addProductFragment(item_index);
+        } else if (f instanceof ProductFragment) {
+            Toast.makeText(MainActivity.this, "Product #" + item_index, Toast.LENGTH_SHORT).show();
+            addProductDescription(item_index);
         }
 
     }
@@ -127,6 +186,12 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
         if (command.equals("login")) {
             Toast.makeText(MainActivity.this, "Log in", Toast.LENGTH_SHORT).show();
             addFrontpageFragment();
+        } else if (command.equals("cart")) {
+            addCartFragment();
+        } else if (command.equals("record")) {
+
+        } else if (command.equals("track")) {
+
         }
     }
 

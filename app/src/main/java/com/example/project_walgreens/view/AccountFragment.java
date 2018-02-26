@@ -36,6 +36,10 @@ public class AccountFragment extends Fragment {
     EditText newpasswordText;
     Button submitButton;
     Animation animation;
+
+    Button ordersButton;
+    Button historyButton;
+    Button trackButton;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,6 +61,10 @@ public class AccountFragment extends Fragment {
         oldpasswordText = rootView.findViewById(R.id.editText5);
         newpasswordText = rootView.findViewById(R.id.editText6);
 
+        ordersButton = rootView.findViewById(R.id.button2);
+        historyButton = rootView.findViewById(R.id.button3);
+        trackButton = rootView.findViewById(R.id.button4);
+
         usernameText.setText("Username: " + AccountDescription.UserName);
         emailText.setText("Email: " + AccountDescription.UserEmail);
         mobileText.setText("Mobile: " + AccountDescription.UserMobile);
@@ -64,6 +72,27 @@ public class AccountFragment extends Fragment {
         submitButton.setAlpha(0.0f);
         oldpasswordText.setAlpha(0.0f);
         newpasswordText.setAlpha(0.0f);
+
+        ordersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage.sendCommand("cart");
+            }
+        });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage.sendCommand("record");
+            }
+        });
+
+        trackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage.sendCommand("track");
+            }
+        });
 
         resetpasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
