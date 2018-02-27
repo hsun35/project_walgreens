@@ -17,13 +17,15 @@ import android.widget.TextView;
 
 import com.example.project_walgreens.R;
 import com.example.project_walgreens.network.AccountDescription;
+import com.example.project_walgreens.presenter.INetPresenter;
+import com.example.project_walgreens.presenter.NetPresenter;
 import com.example.project_walgreens.utils.SendMessage;
 
 /**
  * Created by hefen on 2/24/2018.
  */
 
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements IAccountFragment{
     SendMessage sendMessage;
     View rootView;
     Context context;
@@ -40,6 +42,8 @@ public class AccountFragment extends Fragment {
     Button ordersButton;
     Button historyButton;
     Button trackButton;
+
+    INetPresenter iNetPresenter;//Net
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class AccountFragment extends Fragment {
         ordersButton = rootView.findViewById(R.id.button2);
         historyButton = rootView.findViewById(R.id.button3);
         trackButton = rootView.findViewById(R.id.button4);
+        submitButton = rootView.findViewById(R.id.buttonSubmitPW);
 
         usernameText.setText("Username: " + AccountDescription.UserName);
         emailText.setText("Email: " + AccountDescription.UserEmail);
@@ -72,6 +77,8 @@ public class AccountFragment extends Fragment {
         submitButton.setAlpha(0.0f);
         oldpasswordText.setAlpha(0.0f);
         newpasswordText.setAlpha(0.0f);
+
+        iNetPresenter = new NetPresenter(this);
 
         ordersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +98,26 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 sendMessage.sendCommand("track");
+            }
+        });
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String old_password = oldpasswordText.getText().toString();
+                String new_password = newpasswordText.getText().toString();
+                if (old_password == null || old_password.length() == 0 ||
+                        new_password == null || new_password.length() == 0) {
+                    sendMessage.showMessage("Please fill in your password.");
+                    return;
+                }
+                if (old_password.length() < 3 || new_password.length() < 3) {
+                    sendMessage.showMessage("The shortest password must have 3 letters.");
+                    return;
+                }
+                iNetPresenter.setPassword(AccountDescription.UserMobile, old_password, new_password);
+                oldpasswordText.setText("");
+                newpasswordText.setText("");
             }
         });
 
@@ -124,5 +151,10 @@ public class AccountFragment extends Fragment {
 
     public void setSendMessage(SendMessage sendMessage){
         this.sendMessage = sendMessage;
+    }
+
+    @Override
+    public void showSetPasswordMessage(String msg) {
+        sendMessage.showMessage(msg);
     }
 }

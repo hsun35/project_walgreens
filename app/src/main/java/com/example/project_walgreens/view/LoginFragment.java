@@ -33,7 +33,7 @@ public class LoginFragment extends Fragment implements ILoginFragment{
 
     Context context;
 
-    INetPresenter iNetPresenter;
+    INetPresenter iNetPresenter;//Net
 
     @Nullable
     @Override

@@ -8,11 +8,13 @@ import com.example.project_walgreens.model.LoginResponse;
 import com.example.project_walgreens.model.LoginResponse3;
 import com.example.project_walgreens.model.LoginResponse4;
 import com.example.project_walgreens.model.ProductResponse;
+import com.example.project_walgreens.model.ResetResponse;
 import com.example.project_walgreens.model.SubCategoryResponse;
 import com.example.project_walgreens.network.AccountDescription;
 import com.example.project_walgreens.network.EcommerceService;
 import com.example.project_walgreens.network.ProductList;
 import com.example.project_walgreens.network.RetrofitInstance;
+import com.example.project_walgreens.view.IAccountFragment;
 import com.example.project_walgreens.view.ICategoryFragment;
 import com.example.project_walgreens.view.ILoginFragment;
 import com.example.project_walgreens.view.IMainActivity;
@@ -37,7 +39,7 @@ public class NetPresenter implements INetPresenter{
     ICategoryFragment iCategoryFragment;
     ISubCategoryFragment iSubCategoryFragment;
     IProductFragment iProductFragment;
-
+    IAccountFragment iAccountFragment;
 
     public NetPresenter (ILoginFragment iLoginFragment) {
 
@@ -51,6 +53,9 @@ public class NetPresenter implements INetPresenter{
     }
     public NetPresenter (IProductFragment iProductFragment) {
         this.iProductFragment = iProductFragment;
+    }
+    public NetPresenter (IAccountFragment iAccountFragment) {
+        this.iAccountFragment = iAccountFragment;
     }
     @Override
     public void login(String mobile, String password) {
@@ -166,6 +171,25 @@ public class NetPresenter implements INetPresenter{
     }
 
     @Override
+    public void setPassword(String mobile, String old_password, String new_password) {
+        EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
+        Call<ResetResponse> call = ecommerceService.getResetPassowrd(mobile, old_password, new_password);
+        call.enqueue(new Callback<ResetResponse>() {
+            @Override
+            public void onResponse(Call<ResetResponse> call, Response<ResetResponse> response) {
+                String reply = response.body().getMsg().get(0);
+                Log.i("mylog", "reset password " + reply);
+                iAccountFragment.showSetPasswordMessage(reply);
+            }
+
+            @Override
+            public void onFailure(Call<ResetResponse> call, Throwable t) {
+                Log.i("mylog", "failure: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void getSubCategory(String Id, String api_key, String user_id) {
         EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
 
@@ -217,6 +241,8 @@ public class NetPresenter implements INetPresenter{
             }
         });
     }
+
+
 
     @Override
     public void getCategory(String api_key, String user_id) {

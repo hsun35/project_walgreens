@@ -49,7 +49,7 @@ public interface EcommerceService  {
 
     //reset password, {"msg":["old password mismatch"]} ErrResponse, {"msg":["password reset successfully",null]}
     @GET("shop_reset_pass.php")
-    public Call<Object> getResetPassowrd(@Query("mobile") String mobile,
+    public Call<ResetResponse> getResetPassowrd(@Query("mobile") String mobile,
                                                 @Query("password") String password,
                                                 @Query("newpassword") String newpassword);//ResetResponse
 
