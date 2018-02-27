@@ -183,6 +183,18 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+    private void addTrackFragment() {
+        TrackFragment trackFragment;
+        fragmentTransaction=fragmentManager.beginTransaction();
+
+        trackFragment = new TrackFragment();
+        //recordFragment.setSendMessage(MainActivity.this);
+
+        fragmentTransaction.replace(R.id.fragmentContainer, trackFragment);//
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
     @Override
     public void sendData(int item_index) {
         Object f = fragmentManager.findFragmentById(R.id.fragmentContainer);
@@ -220,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
         } else if (command.equals("record")) {
             addRecordFragment();
         } else if (command.equals("track")) {
-
+            addTrackFragment();
         } else if (command.equals("logout")) {
             AccountDescription.clearRecord();
             ProductList.clearRecord();

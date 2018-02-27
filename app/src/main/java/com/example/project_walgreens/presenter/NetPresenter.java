@@ -7,6 +7,7 @@ import com.example.project_walgreens.model.ErrResponse;
 import com.example.project_walgreens.model.LoginResponse;
 import com.example.project_walgreens.model.LoginResponse3;
 import com.example.project_walgreens.model.LoginResponse4;
+import com.example.project_walgreens.model.OrderResponse;
 import com.example.project_walgreens.model.ProductResponse;
 import com.example.project_walgreens.model.ResetResponse;
 import com.example.project_walgreens.model.SubCategoryResponse;
@@ -195,6 +196,51 @@ public class NetPresenter implements INetPresenter{
     }
 
     @Override
+    public void getOrder(String item_id, String item_names, String item_quantity, String final_price, String mobile, String api_key, String user_id) {
+        EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
+        Call<OrderResponse> call = ecommerceService.getOrder(item_id, item_names, item_quantity, final_price, mobile, api_key, user_id);
+        call.enqueue(new Callback<OrderResponse>() {
+            @Override
+            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                String order_id = String.valueOf(response.body().getOrderConfirmed().get(0).getOrderId());
+                Log.i("mylog", "order id: " + order_id);
+            }
+
+            @Override
+            public void onFailure(Call<OrderResponse> call, Throwable t) {
+                Log.i("mylog", "failure: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getTrack(String order_id, String api_key, String user_id) {
+        EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
+        Call<Object> call = ecommerceService.getTrack(order_id, api_key, user_id);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.body() instanceof List<?>){
+                    String resp = ((List) response.body()).get(0).toString();
+                    resp = resp.replaceAll("[\\[\\](){}]","");
+                    String[] resp_array= resp.split(",");
+                    for (String item : resp_array) {
+                        String[] key_value = item.split("=");
+                        Log.i("mylog", "resp item " + key_value[0] + " " + key_value[1]);
+                    }
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.i("mylog", "failure: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void getSubCategory(String Id, String api_key, String user_id) {
         EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
 
@@ -291,6 +337,7 @@ public class NetPresenter implements INetPresenter{
         });
 
     }
+
 
 
 }

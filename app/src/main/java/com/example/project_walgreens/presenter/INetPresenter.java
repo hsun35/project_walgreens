@@ -12,4 +12,6 @@ public interface INetPresenter {
     void getProduct(String Id, String api_key, String user_id);
     void getRegister(String name, String email, String mobile, String password);
     void setPassword(String mobile, String old_password, String new_password);
+    void getOrder(String item_id,String item_names,String item_quantity,String final_price,String mobile,String api_key,String user_id);
+    void getTrack(String order_id,String api_key,String user_id);
 }

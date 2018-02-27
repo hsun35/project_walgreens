@@ -108,13 +108,20 @@ public class CartFragment extends android.support.v4.app.Fragment implements MyC
                         if (ProductList.item_obtained == null) {
                             ProductList.item_obtained = new HashMap<>();
                         }
+                        if (ProductList.item_in_track == null) {
+                            ProductList.item_in_track = new ArrayList<>();
+                        }
 
                         if (ProductList.item_obtained.containsKey(Id)) {//put one more into a map
                             ProductList.item_obtained.put(Id, ProductList.item_obtained.get(Id) + 1);
                         } else {
                             ProductList.item_obtained.put(Id, 1);//put into list
-                            ProductList.item_in_record.add(new ProductInfo(name, img, price, Id));
+                            ProductList.item_in_record.add(new ProductInfo(name, img, price, Id, "1"));
                         }
+
+                        ProductList.item_in_track.add(new ProductInfo(name, img, price, Id, "1"));
+
+                        
                         ProductList.item_in_cart.remove(i);
                     }
                 }

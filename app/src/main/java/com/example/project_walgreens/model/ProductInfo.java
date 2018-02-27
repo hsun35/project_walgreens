@@ -9,16 +9,18 @@ public class ProductInfo {
     String image;
     String prize;
     String id;
+    String status;
     //int max_num;
     //int num;
     boolean selection;
 
-    public ProductInfo(String productName, String image, String prize, String id) {
+    public ProductInfo(String productName, String image, String prize, String id, String status) {
         this.productName = productName;
         this.image = image;
         this.prize = prize;
         this.id = id;
         this.selection = false;
+        this.status = status;
         //this.max_num = max_num;
         //this.num = num;
     }
@@ -61,5 +63,13 @@ public class ProductInfo {
 
     public void setSelection(boolean selection) {
         this.selection = selection;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -95,7 +95,7 @@ public class ProductDescriptionFragment extends Fragment {
                     ProductList.item_in_cart.add(new ProductInfo(productItem.getProductName(),
                             productItem.getImage(),
                             productItem.getPrize(),
-                            productItem.getId()));
+                            productItem.getId(), "0"));
                 }
 
             }
