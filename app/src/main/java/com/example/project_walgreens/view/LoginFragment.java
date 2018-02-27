@@ -30,6 +30,7 @@ public class LoginFragment extends Fragment implements ILoginFragment{
     EditText passwordText;
     EditText mobileText;
     TextView forgetPasswordText;
+    TextView signup;
 
     Context context;
 
@@ -52,6 +53,7 @@ public class LoginFragment extends Fragment implements ILoginFragment{
         passwordText = rootView.findViewById(R.id.editTextPassword);
         mobileText = rootView.findViewById(R.id.editTextMobileConfirm);
         forgetPasswordText = rootView.findViewById(R.id.textViewForget);
+        signup = rootView.findViewById(R.id.textView2);
 
         iNetPresenter = new NetPresenter(this);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +80,13 @@ public class LoginFragment extends Fragment implements ILoginFragment{
                 } else {
                     iNetPresenter.getPassword(mobile);
                 }
+            }
+        });
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("mylog", "go to sign up.");
+                sendMessage.sendCommand("signup");
             }
         });
     }

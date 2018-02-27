@@ -25,4 +25,10 @@ public class ProductList {
     public static Map<String, Integer> item_obtained;
     public static List<ProductInfo> item_in_cart;
     public static List<ProductInfo> item_in_record;
+    public static void clearRecord() {
+        item_left = null;
+        item_in_record = null;
+        item_obtained = null;
+        item_in_cart = null;
+    }
 }

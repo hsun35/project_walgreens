@@ -47,7 +47,9 @@ public class CartFragment extends android.support.v4.app.Fragment implements MyC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_cart,container,false);
         //Log.i("mylog", "on create fragment");
-        initCart();
+        if (ProductList.item_in_cart != null) {
+            initCart();
+        }
 
         return rootView;
     }

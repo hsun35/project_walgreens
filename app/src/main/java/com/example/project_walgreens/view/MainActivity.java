@@ -15,7 +15,13 @@ import com.example.project_walgreens.R;
 import com.example.project_walgreens.network.AccountDescription;
 import com.example.project_walgreens.network.ProductList;
 import com.example.project_walgreens.utils.SendMessage;
-
+/*
+* The project_walgreens implements basic functions of typical E-commerce Apps
+* The functions includes account management, viewing products on the net, putting orders and checking out items, etc.
+* @author Calvin Swern
+* @version 0.1
+* @since 2018-2-22
+* */
 public class MainActivity extends AppCompatActivity implements SendMessage, IMainActivity{
     Toolbar myToolbar;
     FragmentManager fragmentManager;
@@ -166,6 +172,17 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
         fragmentTransaction.commit();
     }
 
+    private void addRegisterFragment() {
+        RegisterFragment registerFragment;
+        fragmentTransaction=fragmentManager.beginTransaction();
+
+        registerFragment = new RegisterFragment();
+        registerFragment.setSendMessage(MainActivity.this);
+
+        fragmentTransaction.replace(R.id.fragmentContainer, registerFragment);//
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
     @Override
     public void sendData(int item_index) {
         Object f = fragmentManager.findFragmentById(R.id.fragmentContainer);
@@ -195,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
 
     @Override
     public void sendCommand(String command) {
-        if (command.equals("login")) {
+        if (command.equals("login")) {//successfully logged in
             Toast.makeText(MainActivity.this, "Log in", Toast.LENGTH_SHORT).show();
             addFrontpageFragment();
         } else if (command.equals("cart")) {
@@ -204,6 +221,14 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
             addRecordFragment();
         } else if (command.equals("track")) {
 
+        } else if (command.equals("logout")) {
+            AccountDescription.clearRecord();
+            ProductList.clearRecord();
+            addFrontpageFragment();
+        } else if (command.equals("signup")) {
+            addRegisterFragment();
+        } else if (command.equals("signin")) {
+            addLoginFragment();
         }
     }
 

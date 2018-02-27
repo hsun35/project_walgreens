@@ -12,4 +12,7 @@ public class AccountDescription {
     public static String UserMobile = "";
     public static String AppApiKey = "";
     public static String login = "";
+    public static void clearRecord () {
+        login = "";
+    }
 }

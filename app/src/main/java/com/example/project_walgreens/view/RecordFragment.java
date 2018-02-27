@@ -29,7 +29,9 @@ public class RecordFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_record,container,false);
         //Log.i("mylog", "on create fragment");
-        initRecord();
+        if (ProductList.item_in_record != null) {
+            initRecord();
+        }
 
         return rootView;
     }

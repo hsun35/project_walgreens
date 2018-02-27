@@ -147,6 +147,13 @@ public class AccountFragment extends Fragment implements IAccountFragment{
                 }
             }
         });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage.sendCommand("logout");
+            }
+        });
     }
 
     public void setSendMessage(SendMessage sendMessage){

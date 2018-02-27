@@ -19,6 +19,7 @@ import com.example.project_walgreens.view.ICategoryFragment;
 import com.example.project_walgreens.view.ILoginFragment;
 import com.example.project_walgreens.view.IMainActivity;
 import com.example.project_walgreens.view.IProductFragment;
+import com.example.project_walgreens.view.IRegisterFragment;
 import com.example.project_walgreens.view.ISubCategoryFragment;
 import com.example.project_walgreens.view.MainActivity;
 
@@ -40,6 +41,7 @@ public class NetPresenter implements INetPresenter{
     ISubCategoryFragment iSubCategoryFragment;
     IProductFragment iProductFragment;
     IAccountFragment iAccountFragment;
+    IRegisterFragment iRegisterFragment;
 
     public NetPresenter (ILoginFragment iLoginFragment) {
 
@@ -56,6 +58,9 @@ public class NetPresenter implements INetPresenter{
     }
     public NetPresenter (IAccountFragment iAccountFragment) {
         this.iAccountFragment = iAccountFragment;
+    }
+    public NetPresenter (IRegisterFragment iRegisterFragment) {
+        this.iRegisterFragment = iRegisterFragment;
     }
     @Override
     public void login(String mobile, String password) {
@@ -242,6 +247,24 @@ public class NetPresenter implements INetPresenter{
         });
     }
 
+    @Override
+    public void getRegister(String name, String email, String mobile, String password) {
+        EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
+
+        Call<Object> call = ecommerceService.getRegistration(name, email, mobile, password);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                Log.i("mylog", "response " + response.body().toString());
+                iRegisterFragment.showRegisterMessage(response.body().toString().trim());
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.i("mylog", "failure: " + t.getMessage());
+            }
+        });
+    }
 
 
     @Override

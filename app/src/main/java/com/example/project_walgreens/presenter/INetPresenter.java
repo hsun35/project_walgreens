@@ -10,5 +10,6 @@ public interface INetPresenter {
     void getPassword(String mobile);
     void getSubCategory(String Id, String api_key, String user_id);
     void getProduct(String Id, String api_key, String user_id);
+    void getRegister(String name, String email, String mobile, String password);
     void setPassword(String mobile, String old_password, String new_password);
 }
