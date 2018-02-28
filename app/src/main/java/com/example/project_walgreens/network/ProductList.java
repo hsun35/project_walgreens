@@ -1,6 +1,7 @@
 package com.example.project_walgreens.network;
 
 import com.example.project_walgreens.model.CategoryItem;
+import com.example.project_walgreens.model.OrderHistoryItem;
 import com.example.project_walgreens.model.ProductInfo;
 import com.example.project_walgreens.model.ProductItem;
 import com.example.project_walgreens.model.SubCategoryItem;
@@ -17,6 +18,7 @@ public class ProductList {
     public static List<CategoryItem> categoryItemList;
     public static List<ProductItem> productItemList;
     public static List<SubCategoryItem> subCategoryItemList;
+    public static List<OrderHistoryItem> historyItemList;
     //public static Map<String, ProductInfo> cart_item_num;
     //public static List<ProductItem> cartItemList;
     //public static Map<String, ProductInfo> history_item_num;

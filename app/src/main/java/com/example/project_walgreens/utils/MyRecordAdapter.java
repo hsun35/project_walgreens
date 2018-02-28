@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.project_walgreens.R;
+import com.example.project_walgreens.model.OrderHistoryItem;
 import com.example.project_walgreens.model.ProductInfo;
 import com.example.project_walgreens.model.ProductItem;
 import com.example.project_walgreens.network.ProductList;
@@ -22,57 +23,50 @@ import java.util.List;
  */
 
 public class MyRecordAdapter extends RecyclerView.Adapter<MyRecordAdapter.MyViewHolder>{
-    List<ProductInfo> itemsList;
+    List<OrderHistoryItem> itemsList;
     Context context;
-    //private MyRecordAdapter.ItemModifier itemModifier;
 
-/*    public interface ItemModifier{
-        public void onItemSelected(int position);
-    }*/
 
-    public MyRecordAdapter(List<ProductInfo> itemsList, Context context) {
+    public MyRecordAdapter(List<OrderHistoryItem> itemsList, Context context) {
         this.itemsList = itemsList;
         this.context = context;
     }
 
-/*    public void setItemModifier(MyRecordAdapter.ItemModifier itemModifier){
-        this.itemModifier = itemModifier;
-    }*/
+
 
     @Override
     public MyRecordAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v  = LayoutInflater.from(parent.getContext()).inflate(R.layout.record_item_layout, parent, false);//!!!incorrect layout
+        View v  = LayoutInflater.from(parent.getContext()).inflate(R.layout.history_item_layout, parent, false);//!!!incorrect layout
 
         final MyRecordAdapter.MyViewHolder myViewHolder = new MyRecordAdapter.MyViewHolder(v);
 
-        /*v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(itemModifier!=null){
-                    itemModifier.onItemSelected(myViewHolder.getAdapterPosition());
-                }
-            }
-        });*/
 
         return myViewHolder;
     }
 
     @Override
     public void onBindViewHolder(MyRecordAdapter.MyViewHolder holder, int position) {
-        final ProductInfo item = itemsList.get(position);
-        String imageUrl = item.getImage();
-        String Id = item.getId();
+        final OrderHistoryItem item = itemsList.get(position);
 
-        holder.titleTextView.setText(item.getProductName());
-        holder.priceTextView.setText(item.getPrize());
-        holder.numberTextView.setText("Num: " + String.valueOf(ProductList.item_obtained.get(Id)));//
-        //if (isGrid) {
-        //holder.titleTextView.setText(item.getProductName());
-        if (imageUrl == null || imageUrl.length() == 0) {
-            holder.imageViewMyImage.setImageResource(R.drawable.ic_shop);
-        } else {
-            Picasso.with(context).load(imageUrl).into(holder.imageViewMyImage);
+        String status = item.getOrderStatus();
+
+        if (status.equals("0")) {
+            status = "unconfirmed";
+        } else if (status.equals("1")) {
+            status = "confirmed";
+        } else if (status.equals("2")) {
+            status ="dispatched";
+        } else if (status.equals("3")) {
+            status ="on the way";
+        } else if (status.equals("4")) {
+            status ="delivered";
         }
+
+        holder.titleTextView.setText(item.getItemName());
+        holder.priceTextView.setText("$ " + item.getFinalPrice());
+        holder.idTextView.setText("Order Id: " + item.getOrderID());//
+        holder.statusTextView.setText("Order " + status);
+
     }
 
     @Override
@@ -83,16 +77,16 @@ public class MyRecordAdapter extends RecyclerView.Adapter<MyRecordAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder{
         TextView titleTextView;// descriptionTextView, countryTextView;
         TextView priceTextView;
-        TextView numberTextView;
-        ImageView imageViewMyImage;
+        TextView statusTextView;
+        TextView idTextView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            imageViewMyImage = itemView.findViewById(R.id.imageView12);
-            titleTextView = itemView.findViewById(R.id.textView6);
-            priceTextView = itemView.findViewById(R.id.textView10);
-            numberTextView = itemView.findViewById(R.id.textView11);
+            statusTextView = itemView.findViewById(R.id.textView16);
+            titleTextView = itemView.findViewById(R.id.textView14);
+            priceTextView = itemView.findViewById(R.id.textView15);
+            idTextView = itemView.findViewById(R.id.textView13);
         }
     }
 }

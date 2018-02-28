@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.example.project_walgreens.R;
 import com.example.project_walgreens.network.ProductList;
+import com.example.project_walgreens.presenter.INetPresenter;
+import com.example.project_walgreens.presenter.NetPresenter;
 import com.example.project_walgreens.utils.MyRecordAdapter;
 import com.example.project_walgreens.utils.MyTrackAdapter;
 
@@ -19,11 +21,13 @@ import com.example.project_walgreens.utils.MyTrackAdapter;
  * Created by hefen on 2/27/2018.
  */
 
-public class TrackFragment extends Fragment {
+public class TrackFragment extends Fragment implements ITrackFragment{
     View rootView;
     Context context;
     RecyclerView recyclerViewItems;
     MyTrackAdapter adapter;
+
+    INetPresenter iNetPresenter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,15 +42,24 @@ public class TrackFragment extends Fragment {
 
     private void initTrack() {
         context = rootView.getContext();
-        recyclerViewItems = rootView.findViewById(R.id.recyclerViewRecord);
+        ProductList.item_in_track.get(ProductList.item_in_track.size() - 1).setStatus("0");//set the end sign, so net knows when to return
+        iNetPresenter = new NetPresenter(this);
+        iNetPresenter.getTrack(ProductList.item_in_track);
 
+        /*recyclerViewItems = rootView.findViewById(R.id.recyclerViewRecord);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(context));
-
         recyclerViewItems.setHasFixedSize(true);
-
         adapter = new MyTrackAdapter(ProductList.item_in_track, context);
-        //adapter.setItemModifier(this);//??this context
-        recyclerViewItems.setAdapter(adapter);
+        recyclerViewItems.setAdapter(adapter);*/
 
+    }
+
+    @Override
+    public void getTrack() {
+        recyclerViewItems = rootView.findViewById(R.id.recyclerViewRecord);
+        recyclerViewItems.setLayoutManager(new LinearLayoutManager(context));
+        recyclerViewItems.setHasFixedSize(true);
+        adapter = new MyTrackAdapter(ProductList.item_in_track, context);
+        recyclerViewItems.setAdapter(adapter);
     }
 }

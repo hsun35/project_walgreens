@@ -60,7 +60,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyViewHold
             Picasso.with(context).load(imageUrl).into(holder.imageViewMyImage);
         }
         holder.titleTextView.setText(item.getProductName());
-        holder.priceTextView.setText(item.getPrize());
+        holder.priceTextView.setText("$ " + item.getPrize());
         if (item.isSelection()) {
             holder.checkBox.setChecked(true);
         } else {

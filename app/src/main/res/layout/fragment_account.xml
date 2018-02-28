@@ -109,9 +109,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/colorBackground"
-            android:drawableTop="@drawable/ic_orders"
+            android:drawableTop="@drawable/ic_cart"
             android:paddingTop="20sp"
-            android:text="@string/orders" />
+            android:text="@string/my_cart" />
 
         <Button
             android:id="@+id/button3"

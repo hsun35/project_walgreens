@@ -1,6 +1,7 @@
 package com.example.project_walgreens.network;
 
 import com.example.project_walgreens.model.CategoryResponse;
+import com.example.project_walgreens.model.HistoryResponse;
 import com.example.project_walgreens.model.LoginResponse;
 import com.example.project_walgreens.model.OrderResponse;
 import com.example.project_walgreens.model.ProductResponse;
@@ -68,6 +69,10 @@ public interface EcommerceService  {
                                                @Query("api_key") String api_key,
                                                @Query("user_id") String user_id);//String
     //order history
+    @GET("order_history.php")
+    public Call<HistoryResponse> getHistory(@Query("mobile") String mobile,
+                                          @Query("api_key") String api_key,
+                                          @Query("user_id") String user_id);
 
     //order track
     @GET("order_track.php")

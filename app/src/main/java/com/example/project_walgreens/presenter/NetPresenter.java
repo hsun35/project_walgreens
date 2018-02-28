@@ -4,10 +4,12 @@ import android.util.Log;
 
 import com.example.project_walgreens.model.CategoryResponse;
 import com.example.project_walgreens.model.ErrResponse;
+import com.example.project_walgreens.model.HistoryResponse;
 import com.example.project_walgreens.model.LoginResponse;
 import com.example.project_walgreens.model.LoginResponse3;
 import com.example.project_walgreens.model.LoginResponse4;
 import com.example.project_walgreens.model.OrderResponse;
+import com.example.project_walgreens.model.ProductInfo;
 import com.example.project_walgreens.model.ProductResponse;
 import com.example.project_walgreens.model.ResetResponse;
 import com.example.project_walgreens.model.SubCategoryResponse;
@@ -16,12 +18,15 @@ import com.example.project_walgreens.network.EcommerceService;
 import com.example.project_walgreens.network.ProductList;
 import com.example.project_walgreens.network.RetrofitInstance;
 import com.example.project_walgreens.view.IAccountFragment;
+import com.example.project_walgreens.view.ICartFragment;
 import com.example.project_walgreens.view.ICategoryFragment;
 import com.example.project_walgreens.view.ILoginFragment;
 import com.example.project_walgreens.view.IMainActivity;
 import com.example.project_walgreens.view.IProductFragment;
+import com.example.project_walgreens.view.IRecordFragment;
 import com.example.project_walgreens.view.IRegisterFragment;
 import com.example.project_walgreens.view.ISubCategoryFragment;
+import com.example.project_walgreens.view.ITrackFragment;
 import com.example.project_walgreens.view.MainActivity;
 
 import java.util.Collection;
@@ -43,9 +48,11 @@ public class NetPresenter implements INetPresenter{
     IProductFragment iProductFragment;
     IAccountFragment iAccountFragment;
     IRegisterFragment iRegisterFragment;
+    ICartFragment iCartFragment;
+    ITrackFragment iTrackFragment;
+    IRecordFragment iRecordFragment;
 
     public NetPresenter (ILoginFragment iLoginFragment) {
-
         this.iLoginFragment = iLoginFragment;
     }
     public NetPresenter (ICategoryFragment iCategoryFragment) {
@@ -62,6 +69,15 @@ public class NetPresenter implements INetPresenter{
     }
     public NetPresenter (IRegisterFragment iRegisterFragment) {
         this.iRegisterFragment = iRegisterFragment;
+    }
+    public NetPresenter (IRecordFragment iRecordFragment) {
+        this.iRecordFragment = iRecordFragment;
+    }
+    public  NetPresenter (ICartFragment iCartFragment) {
+        this.iCartFragment = iCartFragment;
+    }
+    public  NetPresenter (ITrackFragment iTrackFragment) {
+        this.iTrackFragment = iTrackFragment;
     }
     @Override
     public void login(String mobile, String password) {
@@ -196,45 +212,110 @@ public class NetPresenter implements INetPresenter{
     }
 
     @Override
-    public void getOrder(String item_id, String item_names, String item_quantity, String final_price, String mobile, String api_key, String user_id) {
+    //public void getOrder(String item_id, String item_names, String item_quantity, String final_price, String mobile, String api_key, String user_id) {
+    public void getOrder(List<ProductInfo> ordered_products){
+        //ProductInfo p;
+        if (ordered_products == null) {
+            iCartFragment.getOrderId();
+            return;
+        }
         EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
-        Call<OrderResponse> call = ecommerceService.getOrder(item_id, item_names, item_quantity, final_price, mobile, api_key, user_id);
-        call.enqueue(new Callback<OrderResponse>() {
-            @Override
-            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
-                String order_id = String.valueOf(response.body().getOrderConfirmed().get(0).getOrderId());
-                Log.i("mylog", "order id: " + order_id);
-            }
+        int len = ordered_products.size();
+        for (int i = 0; i < len; i++) {
+            final ProductInfo p = ordered_products.get(i);
+            Call<OrderResponse> call = ecommerceService.getOrder(p.getId(), p.getProductName(), "1", p.getPrize(),
+                                        AccountDescription.UserMobile, AccountDescription.AppApiKey, AccountDescription.UserID);
+            Log.i("mylog", "call url: " + call.request().url().toString());
+            call.enqueue(new Callback<OrderResponse>() {
+                @Override
+                public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                    String end_sign = p.getStatus();
+                    Log.i("mylog", "get order id");
+                    String order_id = String.valueOf(response.body().getOrderConfirmed().get(0).getOrderId());
+                    Log.i("mylog", "order id: " + order_id);
+                    p.setStatus(order_id);
+                    //if (i == len) {}
+                    if (end_sign.equals("0")) {
+                        iCartFragment.getOrderId();
+                    }
+                }
 
-            @Override
-            public void onFailure(Call<OrderResponse> call, Throwable t) {
-                Log.i("mylog", "failure: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<OrderResponse> call, Throwable t) {
+                    Log.i("mylog", "failure: " + t.getMessage());
+                }
+            });
+            //while (p.getStatus().equals("1"));
+        }
+        //iCartFragment.getOrderId(ordered_products);
+
     }
 
     @Override
-    public void getTrack(String order_id, String api_key, String user_id) {
+    //public void getTrack(String order_id, String api_key, String user_id) {
+    public void getTrack(List<ProductInfo> ordered_products){
+        if (ordered_products == null) {
+            iTrackFragment.getTrack();
+            return;
+        }
         EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
-        Call<Object> call = ecommerceService.getTrack(order_id, api_key, user_id);
-        call.enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                if (response.body() instanceof List<?>){
-                    String resp = ((List) response.body()).get(0).toString();
-                    resp = resp.replaceAll("[\\[\\](){}]","");
-                    String[] resp_array= resp.split(",");
-                    for (String item : resp_array) {
-                        String[] key_value = item.split("=");
-                        Log.i("mylog", "resp item " + key_value[0] + " " + key_value[1]);
+        int len = ordered_products.size();
+        for (int i = 0; i < len; i++) {
+            final ProductInfo p = ordered_products.get(i);
+            //String order_id = p.getId();
+
+            Call<Object> call = ecommerceService.getTrack(p.getId(), AccountDescription.AppApiKey, AccountDescription.UserID);
+            call.enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, Response<Object> response) {
+                    String end_sign = p.getStatus();
+
+                    if (response.body() instanceof List<?>) {
+                        String resp = ((List) response.body()).get(0).toString();
+                        resp = resp.replaceAll("[\\[\\](){}]", "");
+                        String[] resp_array = resp.split(",");
+                        for (String item : resp_array) {
+                            String[] key_value = item.split("=");
+                            Log.i("mylog", "resp item " + key_value[0] + " " + key_value[1]);
+                            if (key_value[0].trim().equals("OrderStatus")) {
+                                p.setStatus(key_value[1].trim());
+                            }
+                        }
+
+                        //if (i == len) {}
+                        if (end_sign.equals("0")) {
+                            iTrackFragment.getTrack();
+                        }
+                    } else {
+                        Log.i("mylog", "login response: " + response.body().toString());
                     }
-                } else {
 
                 }
+
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    Log.i("mylog", "failure: " + t.getMessage());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void getRecord(String mobile, String api_key, String user_id) {
+        EcommerceService ecommerceService = RetrofitInstance.getRetrofitInstance().create(EcommerceService.class);
+
+        Call<HistoryResponse> call = ecommerceService.getHistory(mobile, api_key, user_id);
+        //Log.i("mylog", "call url: " + call.request().url().toString());
+        call.enqueue(new Callback<HistoryResponse>() {
+            @Override
+            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+                Log.i("mylog", "get history record");
+                ProductList.historyItemList = response.body().getOrderHistory();
+                iRecordFragment.getRecord();
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
+            public void onFailure(Call<HistoryResponse> call, Throwable t) {
                 Log.i("mylog", "failure: " + t.getMessage());
             }
         });

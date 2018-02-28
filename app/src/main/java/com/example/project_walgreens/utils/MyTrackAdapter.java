@@ -62,8 +62,8 @@ public class MyTrackAdapter extends RecyclerView.Adapter<MyTrackAdapter.MyViewHo
 
 
         holder.titleTextView.setText(item.getProductName());
-        holder.priceTextView.setText(item.getPrize());
-        holder.statusTextView.setText("Order " + String.valueOf(status));//
+        holder.priceTextView.setText("$ " + item.getPrize());
+        holder.statusTextView.setText(String.valueOf(status));//
         //if (isGrid) {
         //holder.titleTextView.setText(item.getProductName());
         if (imageUrl == null || imageUrl.length() == 0) {

@@ -1,5 +1,7 @@
 package com.example.project_walgreens.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +11,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.support.v7.widget.Toolbar;//rather than android.widget.Toolbar
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInResult;
 import com.example.project_walgreens.R;
 import com.example.project_walgreens.network.AccountDescription;
 import com.example.project_walgreens.network.ProductList;
@@ -26,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
     Toolbar myToolbar;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+    ImageView home;
+
+    final int BRAIN_TREE_REQUEST_CODE = 4949;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -36,6 +45,18 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);//remove title on toolbar
+
+        home = findViewById(R.id.imageView11);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Object f = fragmentManager.findFragmentById(R.id.fragmentContainer);
+                if (! (f instanceof FrontpageFragment)) {
+                    addFrontpageFragment();
+                }
+            }
+        });
 
         addFrontpageFragment();
     }
@@ -43,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //return super.onCreateOptionsMenu(menu);
+
+
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.account_menu, menu);
         return true;
@@ -254,4 +277,25 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
         Toast.makeText(MainActivity.this, "Log in", Toast.LENGTH_SHORT).show();
         addFrontpageFragment();
     }*/
+
+    @Override
+    protected  void onActivityResult(int requestCode, int resultCode, Intent data) {//succ
+        Object f = fragmentManager.findFragmentById(R.id.fragmentContainer);
+        if (requestCode == BRAIN_TREE_REQUEST_CODE) {
+            if(RESULT_OK == resultCode) {
+                DropInResult dropInResult = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                String payment_notice = dropInResult.getPaymentMethodNonce().getNonce();
+                Log.e("Successfull", "sucessful");
+                if (f instanceof CartFragment) {
+                    ((CartFragment) f).checkOut();
+                }
+            } else if (requestCode == Activity.RESULT_CANCELED) {
+                Log.e("","User cancled payment");
+            } else {
+                Exception e = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.e("ERROR", "Error");
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
