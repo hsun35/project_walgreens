@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.project_walgreens.view.MainActivity">
+    tools:context="com.example.projectwalgreens.view.MainActivity">
 
     <!-- our toolbar -->
     <android.support.v7.widget.Toolbar
@@ -44,5 +44,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/walgreens_resized_50_50" />
+
+    <ImageView
+        android:id="@+id/imageView14"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="13dp"
+        android:layout_marginEnd="50dp"
+        android:src="@drawable/ic_shopcart"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
