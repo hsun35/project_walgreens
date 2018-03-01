@@ -1,6 +1,7 @@
 package com.example.projectwalgreens.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -16,6 +18,8 @@ import com.example.projectwalgreens.R;
 import com.example.projectwalgreens.presenter.INetPresenter;
 import com.example.projectwalgreens.presenter.NetPresenter;
 import com.example.projectwalgreens.utils.SendMessage;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by hefen on 2/24/2018.
@@ -30,8 +34,10 @@ public class LoginFragment extends Fragment implements ILoginFragment{
     EditText mobileText;
     TextView forgetPasswordText;
     TextView signup;
-
+    CheckBox rememberCheck;
     Context context;
+
+    SharedPreferences sharedPreferences;
 
     INetPresenter iNetPresenter;//Net
 
@@ -53,6 +59,14 @@ public class LoginFragment extends Fragment implements ILoginFragment{
         mobileText = rootView.findViewById(R.id.editTextMobileConfirm);
         forgetPasswordText = rootView.findViewById(R.id.textViewForget);
         signup = rootView.findViewById(R.id.textView2);
+        rememberCheck = rootView.findViewById(R.id.checkBox2);
+        sharedPreferences = context.getSharedPreferences("userdetails", MODE_PRIVATE);
+        boolean remember = sharedPreferences.getBoolean("remember", false);
+        if (remember) {
+            mobileText.setText(sharedPreferences.getString("mobile", ""));
+            passwordText.setText(sharedPreferences.getString("password", ""));
+            rememberCheck.setChecked(true);
+        }
 
         iNetPresenter = new NetPresenter(this);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +75,14 @@ public class LoginFragment extends Fragment implements ILoginFragment{
                 //String username = usernameText.getText().toString();
                 String mobile = mobileText.getText().toString();
                 String password = passwordText.getText().toString();
+                boolean remember = rememberCheck.isChecked();
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("mobile", mobile);
+                editor.putString("password", password);
+                editor.putBoolean("remember", remember);
+                editor.apply();
+
                 if (mobile == null || mobile.length() == 0 || password == null || password.length() == 0) {
                     sendMessage.showMessage("Please don't leave any blanket empty.");
                 } else {
