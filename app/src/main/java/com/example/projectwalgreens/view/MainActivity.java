@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements SendMessage, IMai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*Intent intent = getIntent();
+        if (intent == null || intent.getData() == null) {
+            return;
+        }*/
         fragmentManager = getSupportFragmentManager();//!!
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
