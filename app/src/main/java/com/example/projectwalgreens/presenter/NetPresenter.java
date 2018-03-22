@@ -9,6 +9,7 @@ import com.example.projectwalgreens.model.LoginResponse;
 import com.example.projectwalgreens.model.OrderResponse;
 import com.example.projectwalgreens.model.ProductInfo;
 import com.example.projectwalgreens.model.ProductResponse;
+import com.example.projectwalgreens.model.RegisterResponse;
 import com.example.projectwalgreens.model.ResetResponse;
 import com.example.projectwalgreens.model.SubCategoryResponse;
 import com.example.projectwalgreens.network.AccountDescription;

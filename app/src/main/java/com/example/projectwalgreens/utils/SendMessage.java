@@ -11,4 +11,5 @@ public interface SendMessage {
     //void setToolbar();
     //void sendToggle();
     void getClientTokenFromAppServer();
+    //public static SendMessage sendMessage;
 }
